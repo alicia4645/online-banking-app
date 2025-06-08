@@ -12,11 +12,12 @@ class SignupView(APIView):
     def post(self, request):
      
         data = request.data
-        username = data['username']
-        email = data['email']
-        password = data['password']
-        firstname = data['firstname']
-        lastname = data['lastname']
+        print(data)
+        username = data['user']['username']
+        email = data['user']['email']
+        password = data['user']['password']
+        firstname = data['user']['firstname']
+        lastname = data['user']['lastname']
     
         if not all([username, email, password, firstname, lastname]):
             return Response({'error': 'All fields are required'}, status=400)
