@@ -2,6 +2,7 @@ import {useState} from "react"
 import "../App.css"
 import axios from "axios"
 import validator from "validator"
+import {useNavigate} from "react-router-dom"
 
 function App(){
     const [firstName, setFirstName] = useState("");
@@ -11,7 +12,8 @@ function App(){
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
@@ -90,7 +92,7 @@ function App(){
                     
                     <div className="button-div">
                         <button type="submit" style={{backgroundColor: "#3B82F6"}}>Sign Up</button>
-                        <button>Sign In →</button>
+                        <button role="link" onClick={() => navigate("/signin")}>Sign In →</button>
                     </div>
                     
                 </form>

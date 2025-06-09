@@ -1,11 +1,11 @@
-from django.shortcuts import render
-import json
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.conf import settings
+from rest_framework.permissions import AllowAny
 
 class SignupView(APIView):
     permission_classes = []
@@ -38,4 +38,45 @@ class SignupView(APIView):
         return Response({'message': 'User signed up successfully'}, status=201)
 
 
+class SigninView(APIView):
+    permission_classes = [AllowAny]
 
+    def post(self, request, format=None):
+        data = request.data
+        response = Response({"message" : "Login successfully"})
+        username = data["username"]
+        password = data["password"]
+        user = User.objects(username=username).first()
+
+        if user is not None and user.check_password(password):
+            refresh = RefreshToken.for_user(user)
+                
+            data ={
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }
+
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+                value = data["access"],
+                httponly= settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                secure= settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                samesite= settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                max_age=900,
+            )
+
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_REFRESH_COOKIE'],
+                value = data["refresh"],
+                httponly= settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                expires = settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+                secure= settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                samesite= settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                max_age=7 * 24 * 3600,
+            )
+
+          # csrf.get_token(request)
+            return response
+        else:
+            return Response({"error" : "Invalid username or password!"}, status=400)

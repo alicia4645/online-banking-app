@@ -54,14 +54,24 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+      'bankingApp.authentication.CookieJWTAuthentication',
+     
     ),
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    'AUTH_COOKIE': 'access',  
+    'AUTH_REFRESH_COOKIE': "refresh",  
+    'AUTH_COOKIE_SECURE': False,    
+    'AUTH_COOKIE_HTTP_ONLY' : True,         
+    'AUTH_COOKIE_SAMESITE': 'Lax',
 }
 
 MIDDLEWARE = [
@@ -78,6 +88,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'banking.urls'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
 # CORS_ORIGIN_WHITELIST = (
 #   'http://localhost:8000',
 # )
