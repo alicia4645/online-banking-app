@@ -1,5 +1,13 @@
 from django.db import models
-from mongoengine import Document, StringField, EmailField
+from mongoengine import (
+    Document, 
+    StringField, 
+    EmailField, 
+    DecimalField, 
+    IntField, 
+    ReferenceField, 
+    CASCADE
+)
 from django.contrib.auth.hashers import make_password, check_password
 
 class User(Document):
@@ -23,3 +31,24 @@ class User(Document):
     @property
     def is_anonymous(self):
         return False
+
+class Account(Document):
+    SAVINGS = 'savings'
+    CURRENT = 'current'
+
+    ACCOUNT_TYPES = [CURRENT, SAVINGS]
+
+    user = ReferenceField(User, required=True, reverse_delete_rule=CASCADE)
+    account_type = StringField(required=True, choices=ACCOUNT_TYPES)
+    balance = DecimalField(max_digits=19, precision=2)
+    account_number = IntField(required=True, unique=True)
+    sort_code = IntField(required=True)
+
+    meta = {
+        'indexes': [
+            {
+                'fields': ['user', 'account_type'],
+                'unique': True
+            }
+        ]
+    }

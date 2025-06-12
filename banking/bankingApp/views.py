@@ -1,13 +1,12 @@
-from .models import User
+from .models import User, Account
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.conf import settings
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from django.middleware import csrf
+import random
 
 class SignupView(APIView):
     permission_classes = []
@@ -43,7 +42,7 @@ class SignupView(APIView):
 class SigninView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = request.data
         response = Response({"message" : "Login successfully"})
         username = data["username"]
@@ -81,7 +80,25 @@ class SigninView(APIView):
             )
 
             csrf.get_token(request)
-            print(f"response {response.cookies}")
+
+            #creact account on initial login if one does not already exist 
+            created=False
+            if not Account.objects.filter(user=user, account_type=Account.CURRENT):
+                account_number = random.randint(10000000, 99999999)  
+                Account.objects.create(
+                    user=user, 
+                    account_type=Account.CURRENT, 
+                    balance=100, 
+                    account_number=account_number, 
+                    sort_code=250910
+                )
+                created = True
+
+            if created:
+                print(f"Account created for user {user.username}")
+            else:
+                print(f"Account already exists for user {user.username}")
+
             return response
         else:
             return Response({"error" : "Invalid username or password!"}, status=400)
