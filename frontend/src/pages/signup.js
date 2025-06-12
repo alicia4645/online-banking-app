@@ -28,7 +28,7 @@ function App(){
                 password: password
             }
 
-            axios.post("http://127.0.0.1:8000/api/signup/", { user })
+            axios.post("/api/signup/", { user })
                 .then(response => {
                     setMessage(response.data.message)
                     setError("")   

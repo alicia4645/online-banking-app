@@ -3,7 +3,10 @@ from django.conf import settings
 
 from rest_framework.authentication import CSRFCheck
 from rest_framework import exceptions
+from rest_framework_simplejwt.exceptions import InvalidToken
+from rest_framework.exceptions import AuthenticationFailed
 
+from bankingApp.models import User
 
 def enforce_csrf(request):
     check = CSRFCheck()
@@ -14,15 +17,26 @@ def enforce_csrf(request):
 
 class  CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
-        header = self.get_header(request)
-
-        if header is None:
-            raw_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) or None
-        else:
-            raw_token = self.get_raw_token(header)
+        raw_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        print(len(request.COOKIES))
         if raw_token is None:
             return None
 
         validated_token = self.get_validated_token(raw_token)
-        enforce_csrf(request)
-        return self.get_user(validated_token), validated_token
+        #enforce_csrf(request)
+        
+        return get_user(self,validated_token), validated_token
+    
+def get_user(self, validated_token):
+        user_id_claim = settings.SIMPLE_JWT.get("USER_ID_CLAIM", "user_id")
+        try:
+            user_id = validated_token[user_id_claim] 
+        except KeyError:
+            raise InvalidToken("Token contained no recognizable user identification")
+
+        try:
+            user = User.objects(pk=user_id).first()
+        except User.DoesNotExist:
+            raise AuthenticationFailed("User not found", code="user_not_found")
+
+        return user

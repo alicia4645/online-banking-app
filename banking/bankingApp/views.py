@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+from django.middleware import csrf
 
 class SignupView(APIView):
     permission_classes = []
@@ -47,7 +49,7 @@ class SigninView(APIView):
         username = data["username"]
         password = data["password"]
         user = User.objects(username=username).first()
-
+      
         if user is not None and user.check_password(password):
             refresh = RefreshToken.for_user(user)
                 
@@ -63,6 +65,7 @@ class SigninView(APIView):
                 expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
                 secure= settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
                 samesite= settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                path= '/',
                 max_age=900,
             )
 
@@ -73,10 +76,17 @@ class SigninView(APIView):
                 expires = settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
                 secure= settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
                 samesite= settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                path= '/',
                 max_age=7 * 24 * 3600,
             )
 
-          # csrf.get_token(request)
+            csrf.get_token(request)
+            print(f"response {response.cookies}")
             return response
         else:
             return Response({"error" : "Invalid username or password!"}, status=400)
+        
+class LoggedInStatusView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        return Response({"authenticated": True})

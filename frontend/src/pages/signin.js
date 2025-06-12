@@ -7,7 +7,6 @@ import {useNavigate} from "react-router-dom"
 function App (){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
@@ -20,26 +19,24 @@ function App (){
             password: password
         }
 
-        axios.post("http://127.0.0.1:8000/api/signin/", user,{
+        axios.post("/api/signin/", user,{
                 withCredentials: true,
             })
-            .then(response => {
-                setMessage(response.data.message);
-                setError("");
+            .then(() => {
+                setError("")
                 //open home page
+                navigate("/")
             })
             .catch(error => {
+                console.log(error)
                 setError(error.response.data.error);
-                setMessage("");
             })
     }
-
 
     return(
         <div className="container">
             <div className="forms">
                 <h1>Sign In!</h1>
-                {message && <p style={{ color: 'green' }}>{message}</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <label>Username:</label>
