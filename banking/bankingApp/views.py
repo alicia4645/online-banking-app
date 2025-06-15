@@ -7,13 +7,15 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from django.middleware import csrf
 import random
+from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
+from .serializers import AccountSerializer
 
 class SignupView(APIView):
     permission_classes = []
     def post(self, request):
      
         data = request.data
-        print(data)
         username = data['user']['username']
         email = data['user']['email']
         password = data['user']['password']
@@ -82,7 +84,6 @@ class SigninView(APIView):
             csrf.get_token(request)
 
             #creact account on initial login if one does not already exist 
-            created=False
             if not Account.objects.filter(user=user, account_type=Account.CURRENT):
                 account_number = random.randint(10000000, 99999999)  
                 Account.objects.create(
@@ -92,12 +93,6 @@ class SigninView(APIView):
                     account_number=account_number, 
                     sort_code=250910
                 )
-                created = True
-
-            if created:
-                print(f"Account created for user {user.username}")
-            else:
-                print(f"Account already exists for user {user.username}")
 
             return response
         else:
@@ -107,3 +102,12 @@ class LoggedInStatusView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         return Response({"authenticated": True})
+
+class AccountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        accounts = Account.objects(user=user)
+        serializer = AccountSerializer(accounts, many=True)
+        return Response({"message":serializer.data})

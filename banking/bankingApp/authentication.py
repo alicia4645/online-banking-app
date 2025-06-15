@@ -18,7 +18,6 @@ def enforce_csrf(request):
 class  CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         raw_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
-        print(len(request.COOKIES))
         if raw_token is None:
             return None
 
