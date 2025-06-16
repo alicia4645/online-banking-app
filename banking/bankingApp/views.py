@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from django.middleware import csrf
 import random
-from .serializers import AccountSerializer
+from .serializers import AccountSerializer, TransactionSerializer
 import decimal
 
 class SignupView(APIView):
@@ -138,3 +138,12 @@ class TransactionView(APIView):
 
        
         return Response({"message":"Transfer successful"})
+    
+    def get(self, request):
+        print(request.user)
+        user = request.user
+        user_account = Account.objects(user=user).first()
+        user_transactions = Transaction.objects.filter(user=user_account)
+        serializer = TransactionSerializer(user_transactions, many=True)
+
+        return Response({"message":serializer.data})

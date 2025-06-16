@@ -1,5 +1,5 @@
 from rest_framework_mongoengine import serializers
-from .models import Account
+from .models import Account, Transaction
 from .models import User
 
 class UserSerializer(serializers.DocumentSerializer):
@@ -15,3 +15,10 @@ class AccountSerializer(serializers.DocumentSerializer):
         model = Account
         fields = "__all__"
 
+class TransactionSerializer(serializers.DocumentSerializer):
+    user = AccountSerializer()
+    account = AccountSerializer()
+
+    class Meta:
+        model = Transaction
+        fields = "__all__"
