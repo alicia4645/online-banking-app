@@ -54,6 +54,13 @@ class Account(Document):
     }
 
 class Transaction(Document):
-    sender = ReferenceField(Account, required=True)
-    receiver = ReferenceField(Account, required=True)
+    SENDING = "Sending"
+    RECEIVING = "Receiving"
+
+    ACTION = [SENDING, RECEIVING]
+
+    user = ReferenceField(Account, required=True)
+    account= ReferenceField(Account, required=True)
+    action = StringField(required=True, choices=ACTION )
     amount = DecimalField(max_digits=19, precision=2)
+    new_balance = DecimalField(max_digits=19, precision=2)

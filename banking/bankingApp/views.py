@@ -1,4 +1,4 @@
-from .models import User, Account
+from .models import User, Account, Transaction
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -120,18 +120,21 @@ class TransactionView(APIView):
         amount = data["amount"]
 
         #get sender account details and update
-        sender = data["sender"]["user"]
         sender_account_number = data["sender"]["account_number"]
         sender_account = Account.objects( account_number=sender_account_number).first()
         sender_account.balance -= decimal.Decimal(amount)
         sender_account.save()
 
         #get reciever acount details and update
-        receiver = data["receiver"]["user"]
         receiver_account_number = data["receiver"]["account_number"]
         receiver_account = Account.objects(account_number=receiver_account_number).first()
         receiver_account.balance += decimal.Decimal(amount)
         receiver_account.save()
 
-        
+        #sender transaction
+        Transaction(user=sender_account , account=receiver_account, action=Transaction.SENDING, amount=amount, new_balance=sender_account.balance).save()
+        #receiver transaction
+        Transaction(user=receiver_account, account=sender_account, action=Transaction.RECEIVING, amount=amount, new_balance=receiver_account.balance).save()
+
+       
         return Response({"message":"Transfer successful"})
