@@ -84,4 +84,46 @@ input{
   border-bottom: 1px solid rgb(153, 153, 153);
   margin-bottom: 1rem;
 }
+.menu{
+  border-right: 2px solid rgb(241, 241, 241);
+  box-sizing: border-box;
+  height: 100vh;
+  width:20%;
+}
 
+.main{
+  
+  box-sizing: border-box;
+  height: 100vh;
+  width:80%;
+  padding: 20px;
+}
+
+.account{
+  border: 2px solid aliceblue;
+  border-radius: 30px;
+  background-color: aliceblue;
+  padding:10px;
+}
+
+.logo{
+  
+  height:15vh;
+}
+
+ul{
+  list-style: none;
+  margin:0;
+  padding:0;
+  width:100%;
+}
+
+.list{
+  padding: 10px;
+  position: relative;
+  left:0;
+}
+
+.list:hover{
+  background-color:rgb(241, 241, 241);
+}

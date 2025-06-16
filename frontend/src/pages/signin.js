@@ -34,7 +34,7 @@ function App (){
     }
 
     return(
-        <div className="container">
+        <div className="container" >
             <div className="forms">
                 <h1>Sign In!</h1>
                 {error && <p style={{ color: 'red' }}>{error}</p>}

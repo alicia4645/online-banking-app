@@ -12,12 +12,10 @@ const PrivateRoute = ({ children }) => {
       withCredentials: true,
     })
     .then((response) => {
-      console.log(response)
       setAuth(true);
       setLoading(false);
     })
     .catch((error) => {
-      console.log(error)
       setAuth(false);
       setLoading(false);
     });

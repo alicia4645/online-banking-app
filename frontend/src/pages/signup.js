@@ -73,7 +73,7 @@ function App(){
     }
 
     return(
-        <div className="container">
+        <div className="container" >
             <div className="forms">
                 <h2>Sign Up!</h2>
                 {message && <p style={{ color: 'green' }}>{message}</p>}

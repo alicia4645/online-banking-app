@@ -33,8 +33,8 @@ class User(Document):
         return False
 
 class Account(Document):
-    SAVINGS = 'savings'
-    CURRENT = 'current'
+    SAVINGS = 'Savings'
+    CURRENT = 'Current'
 
     ACCOUNT_TYPES = [CURRENT, SAVINGS]
 
