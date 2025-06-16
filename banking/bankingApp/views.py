@@ -7,9 +7,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from django.middleware import csrf
 import random
-from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer
 from .serializers import AccountSerializer
+import decimal
 
 class SignupView(APIView):
     permission_classes = []
@@ -111,3 +110,25 @@ class AccountView(APIView):
         accounts = Account.objects(user=user)
         serializer = AccountSerializer(accounts, many=True)
         return Response({"message":serializer.data})
+    
+class TransactionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        
+        amount = data["amount"]
+
+        #get sender account details and update
+        sender = data["sender"]["user"]
+        sender_account_number = data["sender"]["account_number"]
+        sender_account = Account.objects( account_number=sender_account_number).first()
+        sender_account.balance -= decimal.Decimal(amount)
+        
+        #get reciever acount details and update
+        receiver = data["receiver"]["user"]
+        receiver_account_number = data["receiver"]["account_number"]
+        receiver_account = Account.objects(account_number=receiver_account_number).first()
+        receiver_account.balance += decimal.Decimal(amount)
+
+        return Response({"message":"transfer"})

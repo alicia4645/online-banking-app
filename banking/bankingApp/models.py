@@ -52,3 +52,8 @@ class Account(Document):
             }
         ]
     }
+
+class Transaction(Document):
+    sender = ReferenceField(Account, required=True)
+    receiver = ReferenceField(Account, required=True)
+    amount = DecimalField(max_digits=19, precision=2)

@@ -7,9 +7,7 @@ import {useNavigate} from "react-router-dom"
 function App(){
     const [accounts, setAccounts] = useState([])
     const [user, setUser] = useState("")
-
     
-
     useEffect(() => {
         const getAccounts = async (e) => {
         axios.get("/api/account/",
@@ -30,7 +28,7 @@ function App(){
             <div className="menu">
                 <div className="logo"></div>
                 <ul>
-                    <li className="list">My Account</li>
+                    <li className="list" style={{backgroundColor:"rgb(241, 241, 241)"}}>My Account</li>
                     <li className="list">Transactions</li>
                     <li className="list">Transfer</li>
                     <li className="list">Manage Cards</li>
