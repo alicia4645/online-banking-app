@@ -124,11 +124,14 @@ class TransactionView(APIView):
         sender_account_number = data["sender"]["account_number"]
         sender_account = Account.objects( account_number=sender_account_number).first()
         sender_account.balance -= decimal.Decimal(amount)
-        
+        sender_account.save()
+
         #get reciever acount details and update
         receiver = data["receiver"]["user"]
         receiver_account_number = data["receiver"]["account_number"]
         receiver_account = Account.objects(account_number=receiver_account_number).first()
         receiver_account.balance += decimal.Decimal(amount)
+        receiver_account.save()
 
-        return Response({"message":"transfer"})
+        
+        return Response({"message":"Transfer successful"})
