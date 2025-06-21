@@ -9,5 +9,5 @@ urlpatterns = [
     path('signin/', SigninView.as_view()),
     path('loggedin/status/', LoggedInStatusView.as_view() ),
     path('account/', AccountView.as_view()),
-    path('transaction/', TransactionView.as_view())
+    path('transactions/', TransactionView.as_view())
 ]

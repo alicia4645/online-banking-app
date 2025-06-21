@@ -1,13 +1,13 @@
 import {useEffect, useState} from "react"
 import "../App.css"
 import axios from "axios"
-import {useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 
 
 function App(){
     const [accounts, setAccounts] = useState([])
     const [user, setUser] = useState("")
-    
+
     useEffect(() => {
         const getAccounts = async (e) => {
         axios.get("/api/account/",
@@ -15,7 +15,6 @@ function App(){
         ).then(response => {
             setAccounts(response.data.message)
             setUser(response.data.message[0].user.firstname)
-            console.log(response.data.message[0].user.firstname)
         }).catch(error => {
             console.log("error")
         })
@@ -27,12 +26,20 @@ function App(){
         <div style={{display:"flex"}} >
             <div className="menu">
                 <div className="logo"></div>
-                <ul>
-                    <li className="list" style={{backgroundColor:"rgb(241, 241, 241)"}}>My Account</li>
-                    <li className="list">Transactions</li>
-                    <li className="list">Transfer</li>
-                    <li className="list">Manage Cards</li>
-                </ul>
+                    <ul>
+                        <li className="list" style={{backgroundColor:"rgb(241, 241, 241)"}}>
+                            <Link to="/">My Account</Link>
+                        </li>
+                        <li className="list">
+                            <Link to="/transactions">Transactions</Link>
+                        </li>
+                        <li className="list">
+                            <Link to="/transfers">Transfer</Link>
+                        </li>
+                        <li className="list">
+                           <Link to="/cards"> Manage Cards</Link>
+                        </li>
+                    </ul>
             </div>
             <div className="main">
                 <div>

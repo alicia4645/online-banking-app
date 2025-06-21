@@ -8,6 +8,7 @@ import PrivateRoute from "./PrivateRoute";
 import Signup from "./pages/signup"
 import Signin from "./pages/signin"
 import Home from "./pages/home"
+import Transactions from "./pages/transactions"
 
 function App() {
  
@@ -24,6 +25,11 @@ function App() {
          
         <Route path="signup" element={<Signup />} />
         <Route path="signin" element={<Signin />} />
+        <Route path="transactions" element={
+          <PrivateRoute>
+            <Transactions />
+          </PrivateRoute>
+          } />
       </Routes>
     </Router>
   );
