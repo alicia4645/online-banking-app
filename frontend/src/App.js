@@ -1,4 +1,3 @@
-import react from "react";
 import {
     BrowserRouter as Router,
     Routes,
@@ -9,6 +8,7 @@ import Signup from "./pages/signup"
 import Signin from "./pages/signin"
 import Home from "./pages/home"
 import Transactions from "./pages/transactions"
+import Transfers from "./pages/transfers"
 
 function App() {
  
@@ -17,11 +17,11 @@ function App() {
    <Router>
       <Routes>
         
-          <Route path="/" element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-            } />
+        <Route path="/" element={
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+          } />
          
         <Route path="signup" element={<Signup />} />
         <Route path="signin" element={<Signin />} />
@@ -30,6 +30,13 @@ function App() {
             <Transactions />
           </PrivateRoute>
           } />
+        <Route path="transfers" element={
+          <PrivateRoute>
+            <Transfers />
+          </PrivateRoute>
+        
+        } />
+
       </Routes>
     </Router>
   );
