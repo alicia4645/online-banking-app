@@ -1,4 +1,4 @@
-from .models import User, Account, Transaction
+from .models import User, Account, Transaction, Card
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,8 +7,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from django.middleware import csrf
 import random
-from .serializers import AccountSerializer, TransactionSerializer
+from .serializers import AccountSerializer, TransactionSerializer, CardSerializer
 import decimal
+from datetime import date, timedelta
 
 class SignupView(APIView):
     permission_classes = []
@@ -92,6 +93,17 @@ class SigninView(APIView):
                     account_number=account_number, 
                     sort_code=250910
                 )
+
+            if not Card.objects.filter(user=user):
+                card = Card(
+                    user=user,
+                    account= Account.objects.filter(user=user, account_type=Account.CURRENT).first(),
+                    cvv= f"{random.randint(0,999):03d}",
+                    pin= f"{random.randint(0,9999):04d}",
+                    expiry_date = date.today().replace(year=date.today().year + 4)
+                )
+                card.create_card_number()
+                card.save()
             
             
             return response
@@ -141,10 +153,23 @@ class TransactionView(APIView):
         return Response({"message":"Transfer successful"})
     
     def get(self, request):
-        print(request.user)
         user = request.user
         user_account = Account.objects(user=user).first()
         user_transactions = Transaction.objects.filter(user=user_account)
         serializer = TransactionSerializer(user_transactions, many=True)
+
+        return Response({"message":serializer.data})
+    
+
+#cardview get cards
+class CardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        print(request.user)
+
+        cards = Card.objects.filter(user=user)
+        serializer = CardSerializer(cards, many=True)
 
         return Response({"message":serializer.data})

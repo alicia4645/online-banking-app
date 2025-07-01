@@ -6,9 +6,12 @@ from mongoengine import (
     DecimalField, 
     IntField, 
     ReferenceField, 
+    DateField,
     CASCADE
 )
 from django.contrib.auth.hashers import make_password, check_password
+import random
+
 
 class User(Document):
     username = StringField(required=True, unique=True)
@@ -62,5 +65,18 @@ class Transaction(Document):
     user = ReferenceField(Account, required=True)
     account= ReferenceField(Account, required=True)
     action = StringField(required=True, choices=ACTION )
-    amount = DecimalField(max_digits=19, precision=2)
-    new_balance = DecimalField(max_digits=19, precision=2)
+    amount = DecimalField(max_digits=19, precision=2, required=True)
+    new_balance = DecimalField(max_digits=19, precision=2, required=True)
+
+class Card(Document):
+    user = ReferenceField(User, required=True)
+    account = ReferenceField(Account, required=True)
+    card_number = StringField(max_length=16, min_length=16, unique=True, required=True)
+    cvv = StringField(max_length=3, unique=True, required=True)
+    expiry_date = DateField(required=True)
+    pin = StringField(max_length=4, required=True)
+
+    def create_card_number(self):
+        bin = "423156"
+        num = ''.join(str(random.randint(0, 9)) for _ in range(10))
+        self.card_number = bin + num
