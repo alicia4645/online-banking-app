@@ -1,12 +1,14 @@
 import {useEffect, useState} from "react"
 import "../App.css"
 import axios from "axios"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 
 
 function App(){
     const [accounts, setAccounts] = useState([])
     const [user, setUser] = useState("")
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const getAccounts = async (e) => {
@@ -52,7 +54,23 @@ function App(){
                         <p style={{fontWeight:"bold", fontSize:"20px"}}>£{account.balance}</p>
                         <p>{account.sort_code} / {account.account_number}</p>
                     </div>
-                    ))}
+                ))}
+
+                <div style={{
+                    borderRadius: "30px",
+                    backgroundColor: "rgb(123, 186, 241)",
+                    padding:"10px",
+                    marginBottom: "10px",
+                    position: "absolute", 
+                    bottom: "20px",
+                    right:"20px",
+                    left:"20px",
+                }}
+                onClick={()=> {navigate("/accounts")}}
+                >
+                    <h2>Eplore accounts</h2>
+                    <p>View the available accounts our bank has to offer.</p>
+                </div>
             </div>
         </div>
 

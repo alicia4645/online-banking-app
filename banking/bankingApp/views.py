@@ -115,6 +115,17 @@ class LoggedInStatusView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         return Response({"authenticated": True})
+    
+def create_card(user, account):
+    card = Card(
+        user=user,
+        account= account,
+        cvv= f"{random.randint(0,999):03d}",
+        pin= f"{random.randint(0,9999):04d}",
+        expiry_date = date.today().replace(year=date.today().year + 4)
+    )
+    card.create_card_number()
+    card.save()
 
 class AccountView(APIView):
     permission_classes = [IsAuthenticated]
@@ -124,6 +135,23 @@ class AccountView(APIView):
         accounts = Account.objects(user=user)
         serializer = AccountSerializer(accounts, many=True)
         return Response({"message":serializer.data})
+    
+    def post(self, request):
+        user = request.user
+        acc_type = request.data["account_type"]
+        account_number = random.randint(10000000, 99999999)  
+        account = Account(
+            user=user, 
+            account_type=acc_type, 
+            balance=100, 
+            account_number=account_number, 
+            sort_code=250910
+        ) 
+        account.save()
+        create_card(user, account )
+        return Response({"message": f"Your {acc_type} Account has successfully been created"})
+
+
     
 class TransactionView(APIView):
     permission_classes = [IsAuthenticated]
@@ -172,3 +200,14 @@ class CardView(APIView):
         serializer = CardSerializer(cards, many=True)
 
         return Response({"message":serializer.data})
+    
+    def post(self, request):
+        user = request.user
+        acc_type = request.data["type"]
+        account = Account.objects.filter(user=user, account_type=acc_type).first()
+        
+        create_card(user,account)
+
+        return Response({"message": "Card successfully made"})
+    
+

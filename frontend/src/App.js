@@ -10,6 +10,7 @@ import Home from "./pages/home"
 import Transactions from "./pages/transactions"
 import Transfers from "./pages/transfers"
 import Cards from "./pages/cards"
+import Accounts from "./pages/accounts"
 
 function App() {
  
@@ -39,6 +40,11 @@ function App() {
         <Route path="cards" element={
           <PrivateRoute>
             <Cards />
+          </PrivateRoute>
+        } />
+        <Route path="accounts" element={
+          <PrivateRoute>
+            <Accounts />
           </PrivateRoute>
         } />
 
