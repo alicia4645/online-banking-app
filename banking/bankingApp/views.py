@@ -105,6 +105,7 @@ class SigninView(APIView):
                 card.create_card_number()
                 card.save()
             
+    
             
             return response
         else:
@@ -167,8 +168,6 @@ class CardView(APIView):
 
     def get(self, request):
         user = request.user
-        print(request.user)
-
         cards = Card.objects.filter(user=user)
         serializer = CardSerializer(cards, many=True)
 

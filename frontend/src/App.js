@@ -9,6 +9,7 @@ import Signin from "./pages/signin"
 import Home from "./pages/home"
 import Transactions from "./pages/transactions"
 import Transfers from "./pages/transfers"
+import Cards from "./pages/cards"
 
 function App() {
  
@@ -34,7 +35,11 @@ function App() {
           <PrivateRoute>
             <Transfers />
           </PrivateRoute>
-        
+        } />
+        <Route path="cards" element={
+          <PrivateRoute>
+            <Cards />
+          </PrivateRoute>
         } />
 
       </Routes>

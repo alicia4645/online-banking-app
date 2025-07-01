@@ -157,3 +157,23 @@ ul{
   height: 50vw;
   color: green;
 }
+
+
+.card{
+  border: 1px black solid;
+  border-radius: 10px;
+  height: 30vh;
+  margin-top:25px;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width:70vh;
+}
+
+.details{
+  padding: 10px;
+  padding-top: 20px;
+  box-sizing: border-box;
+  height:20vh;
+}
