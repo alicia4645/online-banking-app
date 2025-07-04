@@ -26,8 +26,7 @@ function App(){
                 setAccount(response.data.message[0])
                 setAllAccounts(response.data.message)
             }).catch(error => {
-                setError("An error has occured. Please try again.")
-                console.log(error)
+                setError(`Transaction has failed! ${error.error}`)
             })
     }
         getAccounts();

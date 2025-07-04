@@ -67,6 +67,7 @@ class Transaction(Document):
     action = StringField(required=True, choices=ACTION )
     amount = DecimalField(max_digits=19, precision=2, required=True)
     new_balance = DecimalField(max_digits=19, precision=2, required=True)
+    date = DateField(required=True)
 
 class Card(Document):
     user = ReferenceField(User, required=True)

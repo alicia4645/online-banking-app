@@ -79,8 +79,7 @@ function App(){
                 setError("")
                 setSuccess(true)
             }).catch(error => {
-                setError("Transaction has failed! Please check all details are correct.")
-                console.log(error)
+                setError(`Transaction has failed! ${error.error}`)
             }
         )
     } 

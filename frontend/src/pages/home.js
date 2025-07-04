@@ -49,7 +49,17 @@ function App(){
                 </div>
 
                 {accounts.map(account => ( 
-                    <div key={account.account_number} className="account">
+                    <div 
+                        key={account.account_number} 
+                        className="account" 
+                        onClick={() => {
+                            account.account_type === "Current" ? (
+                                navigate("/currentTranactions")
+                            ) : ( 
+                                navigate("/savingsTranactions")
+                            )
+                        }}
+                    >
                         <p>{account.account_type} Account</p>
                         <p style={{fontWeight:"bold", fontSize:"20px"}}>£{account.balance}</p>
                         <p>{account.sort_code} / {account.account_number}</p>

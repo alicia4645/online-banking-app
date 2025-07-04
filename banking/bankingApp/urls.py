@@ -10,5 +10,6 @@ urlpatterns = [
     path('loggedin/status/', LoggedInStatusView.as_view() ),
     path('account/', AccountView.as_view()),
     path('transactions/', TransactionView.as_view()),
+    path('transactions/<str:type>/', TransactionView.as_view()),
     path('cards/', CardView.as_view())
 ]

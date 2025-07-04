@@ -2,6 +2,7 @@ from .models import User, Account, Transaction, Card
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 from django.conf import settings
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
@@ -84,7 +85,7 @@ class SigninView(APIView):
             csrf.get_token(request)
 
             #creact account on initial login if one does not already exist 
-            if not Account.objects.filter(user=user, account_type=Account.CURRENT):
+            if not Account.objects(user=user, account_type=Account.CURRENT):
                 account_number = random.randint(10000000, 99999999)  
                 Account.objects.create(
                     user=user, 
@@ -97,16 +98,14 @@ class SigninView(APIView):
             if not Card.objects.filter(user=user):
                 card = Card(
                     user=user,
-                    account= Account.objects.filter(user=user, account_type=Account.CURRENT).first(),
+                    account= Account.objects(user=user, account_type=Account.CURRENT).first(),
                     cvv= f"{random.randint(0,999):03d}",
                     pin= f"{random.randint(0,9999):04d}",
                     expiry_date = date.today().replace(year=date.today().year + 4)
                 )
                 card.create_card_number()
                 card.save()
-            
-    
-            
+        
             return response
         else:
             return Response({"error" : "Invalid username or password!"}, status=400)
@@ -164,27 +163,37 @@ class TransactionView(APIView):
         #get sender account details and update
         sender_account_number = data["sender"]["account_number"]
         sender_account = Account.objects( account_number=sender_account_number).first()
+        
+        if sender_account.balance < decimal.Decimal(amount):
+            return Response({"error": "Insufficient funds"}, status=status.HTTP_400_BAD_REQUEST)
+
+        
         sender_account.balance -= decimal.Decimal(amount)
         sender_account.save()
-
+        sender_account.reload()
         #get reciever acount details and update
         receiver_account_number = data["receiver"]["account_number"]
         receiver_account = Account.objects(account_number=receiver_account_number).first()
+        
+        if not receiver_account:
+            return Response({"error": "Payee account not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        
         receiver_account.balance += decimal.Decimal(amount)
         receiver_account.save()
-
+        receiver_account.reload()
         #sender transaction
-        Transaction(user=sender_account , account=receiver_account, action=Transaction.SENDING, amount=amount, new_balance=sender_account.balance).save()
+        Transaction(user=sender_account , account=receiver_account, action=Transaction.SENDING, amount=amount, new_balance=sender_account.balance , date=date.today()).save()
         #receiver transaction
-        Transaction(user=receiver_account, account=sender_account, action=Transaction.RECEIVING, amount=amount, new_balance=receiver_account.balance).save()
+        Transaction(user=receiver_account, account=sender_account, action=Transaction.RECEIVING, amount=amount, new_balance=receiver_account.balance, date=date.today()).save()
 
        
         return Response({"message":"Transfer successful"})
     
-    def get(self, request):
+    def get(self, request, type):
         user = request.user
-        user_account = Account.objects(user=user).first()
-        user_transactions = Transaction.objects.filter(user=user_account)
+        user_account = Account.objects(user=user, account_type=type).first()
+        user_transactions = Transaction.objects(user=user_account)
         serializer = TransactionSerializer(user_transactions, many=True)
 
         return Response({"message":serializer.data})
@@ -196,7 +205,7 @@ class CardView(APIView):
 
     def get(self, request):
         user = request.user
-        cards = Card.objects.filter(user=user)
+        cards = Card.objects(user=user)
         serializer = CardSerializer(cards, many=True)
 
         return Response({"message":serializer.data})
@@ -204,7 +213,7 @@ class CardView(APIView):
     def post(self, request):
         user = request.user
         acc_type = request.data["type"]
-        account = Account.objects.filter(user=user, account_type=acc_type).first()
+        account = Account.objects(user=user, account_type=acc_type).first()
         
         create_card(user,account)
 

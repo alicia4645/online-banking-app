@@ -11,6 +11,9 @@ import Transactions from "./pages/transactions"
 import Transfers from "./pages/transfers"
 import Cards from "./pages/cards"
 import Accounts from "./pages/accounts"
+import CurrentTranactions from "./pages/currentTranactions"
+import SavingsTranactions from "./pages/savingsTranactions"
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
  
@@ -45,6 +48,16 @@ function App() {
         <Route path="accounts" element={
           <PrivateRoute>
             <Accounts />
+          </PrivateRoute>
+        } />
+        <Route path="currentTranactions" element={
+          <PrivateRoute>
+            <CurrentTranactions />
+          </PrivateRoute>
+        } />
+        <Route path="savingsTranactions" element={
+          <PrivateRoute>
+            <SavingsTranactions />
           </PrivateRoute>
         } />
 
