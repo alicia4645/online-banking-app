@@ -1,13 +1,15 @@
 import {useEffect, useState} from "react"
 import "../App.css"
 import axios from "axios"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 
 function App(){
     const [accounts, setAccounts] = useState([])
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
 
+    const navigate = useNavigate()
+    
     useEffect(() => {
         const getAccounts = async (e) => {
             axios.get("/api/account/",
@@ -44,25 +46,47 @@ function App(){
         })
     }
 
+    const logout = async (e) => {
+        axios.post("/api/logout/",
+            {withCredentials:true}
+        ).then(response => {
+            navigate("/signin")
+        })
+        
+    }
+
 
     return(
        <div style={{display:"flex"}} >
             <div className="menu">
                 <div className="logo"></div>
-                    <ul>
-                        <li className="list" >
+                <div style={{
+                    display:"flex", 
+                    flexDirection:"column",
+                    justifyContent:"space-between",
+                    height:"80%",
+                }}>
+                     <ul>
+                        <li style={{backgroundColor:"rgb(241, 241, 241)"}}>
                             <Link to="/">My Account</Link>
                         </li>
-                        <li className="list">
+                        <li >
                             <Link to="/transactions">Transactions</Link>
                         </li>
-                        <li className="list">
+                        <li >
                             <Link to="/transfers">Transfer</Link>
                         </li>
-                        <li className="list">
+                        <li >
                            <Link to="/cards"> Manage Cards</Link>
                         </li>
                     </ul>
+
+                    <ul>
+                        <li onClick={logout}>
+                            Sign Out
+                        </li>
+                    </ul>
+                </div>
             </div>
             
             <div className="main">

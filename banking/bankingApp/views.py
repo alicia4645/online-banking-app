@@ -10,7 +10,7 @@ from django.middleware import csrf
 import random
 from .serializers import AccountSerializer, TransactionSerializer, CardSerializer
 import decimal
-from datetime import date, timedelta
+from datetime import date
 
 class SignupView(APIView):
     permission_classes = []
@@ -220,3 +220,9 @@ class CardView(APIView):
         return Response({"message": "Card successfully made"})
     
 
+class LogoutView(APIView):
+    def post(self, request):
+        response =  Response({"message": "Succesfully logged out"})
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_REFRESH_COOKIE'])
+        return response

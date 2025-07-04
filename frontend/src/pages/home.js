@@ -24,24 +24,48 @@ function App(){
         getAccounts();
     }, [])
    
+
+    const logout = async (e) => {
+        axios.post("/api/logout/",
+            {withCredentials:true}
+        ).then(response => {
+            navigate("/signin")
+        })
+        
+    }
+
     return (
         <div style={{display:"flex"}} >
             <div className="menu">
                 <div className="logo"></div>
-                    <ul>
-                        <li className="list" style={{backgroundColor:"rgb(241, 241, 241)"}}>
+                <div style={{
+                    display:"flex", 
+                    flexDirection:"column",
+                    justifyContent:"space-between",
+                    height:"80%",
+                }}>
+                     <ul>
+                        <li style={{backgroundColor:"rgb(241, 241, 241)"}}>
                             <Link to="/">My Account</Link>
                         </li>
-                        <li className="list">
+                        <li >
                             <Link to="/transactions">Transactions</Link>
                         </li>
-                        <li className="list">
+                        <li >
                             <Link to="/transfers">Transfer</Link>
                         </li>
-                        <li className="list">
+                        <li >
                            <Link to="/cards"> Manage Cards</Link>
                         </li>
                     </ul>
+
+                    <ul>
+                        <li onClick={logout}>
+                            Sign Out
+                        </li>
+                    </ul>
+                </div>
+                   
             </div>
             <div className="main">
                 <div>
