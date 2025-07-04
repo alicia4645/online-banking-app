@@ -14,7 +14,7 @@ import Accounts from "./pages/accounts"
 import CurrentTranactions from "./pages/currentTranactions"
 import SavingsTranactions from "./pages/savingsTranactions"
 import 'bootstrap/dist/css/bootstrap.min.css'
-
+import "./App.css"
 
 function App() {
  

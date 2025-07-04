@@ -20,17 +20,17 @@ label, input {
 }
 
 button{
-  padding:0.5rem;
-  border-radius: 9999px;
-  border: none;
-  text-align: center;
-  font-size: 16px;
-  margin: 4px 2px;
+  padding:0.5rem !important; 
+  border-radius: 9999px !important;
+  border: none !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  margin: 4px 2px !important;
 }
 
 button:hover{
-  cursor: pointer;
-  opacity:0.8;
+  cursor: pointer !important;
+  opacity:0.8 !important;
 }
 
 .button-div{
@@ -75,7 +75,7 @@ input{
   height:15vh;
 }
 
-ul{
+.menu ul{
   list-style: none;
   margin:0;
   padding:0;
@@ -83,7 +83,7 @@ ul{
   text-decoration: none;
 }
 
-li{
+.menu li{
   padding: 10px;
   position: relative;
   left:0;
@@ -92,9 +92,20 @@ li{
   list-style: none;
 }
 
-li:hover{
+.menu li:hover{
   background-color:rgb(241, 241, 241);
 }
+
+.link{
+  text-decoration: none;
+  list-style: none;
+  left:0;
+  margin:0;
+  padding:0;
+  color: black;
+}
+
+
 
 .amount{
   border-radius: 30px;

@@ -9,7 +9,7 @@ function App(){
     const [shownPins, setShownPins] = useState([])
 
     const navigate = useNavigate()
-    
+
     const getCards = async() => {
         await axios.get("/api/cards/", 
             {withCredentials: true}
@@ -61,16 +61,16 @@ function App(){
                 }}>
                      <ul>
                         <li>
-                            <Link to="/">My Account</Link>
+                            <Link className="link" to="/">My Account</Link>
                         </li>
                         <li >
-                            <Link to="/transactions">Transactions</Link>
+                            <Link className="link" to="/transactions">Transactions</Link>
                         </li>
                         <li >
-                            <Link to="/transfers">Transfer</Link>
+                            <Link className="link" to="/transfers">Transfer</Link>
                         </li>
                         <li style={{backgroundColor:"rgb(241, 241, 241)"}}>
-                           <Link to="/cards"> Manage Cards</Link>
+                           <Link className="link" to="/cards"> Manage Cards</Link>
                         </li>
                     </ul>
 
