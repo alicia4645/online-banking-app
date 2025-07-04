@@ -225,4 +225,5 @@ class LogoutView(APIView):
         response =  Response({"message": "Succesfully logged out"})
         response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
         response.delete_cookie(settings.SIMPLE_JWT['AUTH_REFRESH_COOKIE'])
+        response.delete_cookie("csrftoken")
         return response

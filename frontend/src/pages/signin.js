@@ -46,7 +46,7 @@ function App (){
                     
                     <div className="button-div">
                         <button type="submit" style={{backgroundColor: "#3B82F6"}}>Sign In</button>
-                        <button role="link" onClick={() => navigate("/signup")}>Sign Up →</button>
+                        <button type="button" onClick={() => navigate("/signup")}>Sign Up →</button>
                     </div>
                 </form>           
             </div>
